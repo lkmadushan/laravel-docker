@@ -12,7 +12,7 @@ git clone https://github.com/lkmadushan/laravel-docker.git
 cd laravel-docker
 
 # Start Laravel application (You can access application through http://localhost)
-./develop up -d
+./develop up -d && ./develop composer install
 ```
 
 ## `develop` Helper
