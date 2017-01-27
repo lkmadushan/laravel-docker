@@ -1,0 +1,36 @@
+version: '2'
+services:
+  app:
+    build:
+      context: ./docker/app
+      dockerfile: Dockerfile
+      args:
+        - TZ=${TZ}
+        - PUID=${PUID}
+        - PGID=${PGID}
+    image: laraveldocker/app
+    volumes:
+     - .:/var/www/html
+    networks:
+     - laraveldocker
+  node:
+    build:
+      context: ./docker/node
+      dockerfile: Dockerfile
+    image: laraveldocker/node
+    volumes:
+     - .:/var/www/html
+    networks:
+     - laraveldocker
+  postgres:
+    image: postgres:alpine
+    volumes:
+     - postgresdata:/var/lib/postgresql/data
+    networks:
+     - laraveldocker
+  redis:
+    image: redis:alpine
+    volumes:
+     - redisdata:/data
+    networks:
+     - laraveldocker

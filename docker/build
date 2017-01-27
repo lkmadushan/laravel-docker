@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+docker build -f app/Dockerfile -t laraveldocker/app:latest ./app
+docker build -f node/Dockerfile -t laraveldocker/node:latest ./node

@@ -1,0 +1,88 @@
+#!/usr/bin/env bash
+
+# Get host address
+XDEBUG_HOST=""
+
+if [ "$(uname)" == "Darwin" ]; then
+    # Mac: Get host address
+    XDEBUG_HOST=$(ipconfig getifaddr en0)
+else
+    # Linux: Get host address
+    XDEBUG_HOST=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1' | head -n1)
+fi
+
+# Environment variables
+export APP_ENV=${APP_ENV:-local}
+export APP_PORT=${APP_PORT:-80}
+export DB_PORT=${DB_PORT:-5432}
+export DB_ROOT_PASS=${DB_ROOT_PASS:-secret}
+export DB_NAME=${DB_NAME:-homestead}
+export DB_USER=${DB_USER:-homestead}
+export DB_PASS=${DB_PASS:-secret}
+export TZ=${TZ:-UTC}
+export PUID=${PUID:-1000}
+export PGID=${PGID:-1000}
+export XDEBUG_HOST=${XDEBUG_HOST}
+
+# Decide which docker-compose file to use
+COMPOSE_FILE="dev"
+
+# Users of the docker containers
+DOCKER_USER_APP="www-data"
+DOCKER_USER_NODE="node"
+
+# Disable pseudo-TTY allocation for CI (Jenkins)
+TTY=""
+
+if [ ! -z "$BUILD_NUMBER" ]; then
+    COMPOSE_FILE="ci"
+    TTY="-T"
+fi
+
+COMPOSE="docker-compose -f docker-compose.$COMPOSE_FILE.yml"
+
+if [ $# -gt 0 ];then
+    if [ "$1" == "art" ]; then
+        shift 1
+        $COMPOSE run --user="$DOCKER_USER_APP" --rm $TTY \
+            -w /var/www/html \
+            app \
+            php artisan "$@"
+    # If "composer" is used, pass-thru to "composer"
+    # inside a new container
+    elif [ "$1" == "composer" ]; then
+        shift 1
+        $COMPOSE run --user="$DOCKER_USER_APP" --rm $TTY \
+            -w /var/www/html \
+            app \
+            composer "$@"
+
+    # If "test" is used, run unit tests,
+    # pass-thru any extra arguments to php-unit
+    elif [ "$1" == "test" ]; then
+        shift 1
+        $COMPOSE run --user="$DOCKER_USER_APP" --rm $TTY \
+            -w /var/www/html \
+            app \
+            ./vendor/bin/phpunit "$@"
+
+    elif [ "$1" == "t" ]; then
+		shift 1
+		$COMPOSE exec --user="$DOCKER_USER_APP" \
+			app \
+			sh -c "cd /var/www/html && ./vendor/bin/phpunit $@"
+
+    # If "npm" is used, run npm
+    # from our node container
+    elif [ "$1" == "npm" ]; then
+        shift 1
+        $COMPOSE run --user="$DOCKER_USER_NODE" --rm $TTY \
+            -w /var/www/html \
+            node \
+            npm "$@"
+    else
+        $COMPOSE "$@"
+    fi
+else
+    $COMPOSE ps
+fi
