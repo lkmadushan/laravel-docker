@@ -77,6 +77,6 @@ RUN chmod +x /etc/my_init.d/start-container
 EXPOSE 80
 
 ## Clean OS
-RUN apt-get remove -y --purge software-properties-common \
+RUN apt-get remove -y --purge --auto-remove software-properties-common \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
