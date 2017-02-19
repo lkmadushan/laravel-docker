@@ -22,8 +22,10 @@ node('master') {
             sh "APP_ENV=testing ./develop test"
         }
     } catch(error) {
+        // Maybe some alerting?
         thorw error
     } finally {
+        // Spin down containers no matter what happens
         sh './develop down'
         sh 'docker-cleanup'
     }
