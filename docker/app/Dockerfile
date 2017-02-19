@@ -56,8 +56,8 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime \
     && echo $TZ > /etc/timezone
 
 # Set permissions
-ARG PUID=1000
-ARG PGID=1000
+ARG PUID=33
+ARG PGID=33
 RUN groupmod -g $PGID www-data \
     && usermod -u $PUID www-data
 

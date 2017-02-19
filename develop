@@ -1,14 +1,11 @@
 #!/usr/bin/env bash
 
-# Get host address
-XDEBUG_HOST=""
-
 if [ "$(uname)" == "Darwin" ]; then
     # Mac: Get host address
-    XDEBUG_HOST=$(ipconfig getifaddr en0)
+    export XDEBUG_HOST=$(ipconfig getifaddr en0)
 else
     # Linux: Get host address
-    XDEBUG_HOST=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1' | head -n1)
+    export XDEBUG_HOST=$(/sbin/ifconfig docker0 | grep "inet addr" | cut -d ':' -f 2 | cut -d ' ' -f 1)
 fi
 
 # Environment variables
@@ -22,7 +19,6 @@ export DB_PASS=${DB_PASS:-secret}
 export TZ=${TZ:-UTC}
 export PUID=${PUID:-1000}
 export PGID=${PGID:-1000}
-export XDEBUG_HOST=${XDEBUG_HOST}
 
 # Decide which docker-compose file to use
 COMPOSE_FILE="dev"
