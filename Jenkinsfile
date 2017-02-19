@@ -1,7 +1,7 @@
 #!/usr/bin/env groovy
 
-try {
-    node('master') {
+node('master') {
+    try {
         stage('build') {
             git url: 'git@github.com:lkmadushan/laravel-docker.git'
 
@@ -21,10 +21,10 @@ try {
         stage('test') {
             sh "APP_ENV=testing ./develop test"
         }
+    } catch(error) {
+        thorw error
+    } finally {
+        sh './develop down'
+        sh 'docker-cleanup'
     }
-} catch(error) {
-    throw error
-} finally {
-    sh './develop down'
-    sh 'docker-cleanup'
 }
