@@ -4,6 +4,10 @@ services:
     extends:
       file: docker-compose.base.yml
       service: app
+    build:
+      args:
+        - PUID=${PUID}
+        - PGID=${PGID}
     ports:
      - "${APP_PORT}:80"
     environment:

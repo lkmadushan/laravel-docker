@@ -6,8 +6,6 @@ services:
       dockerfile: Dockerfile
       args:
         - TZ=${TZ}
-        - PUID=${PUID}
-        - PGID=${PGID}
     image: laraveldocker/app
     volumes:
      - .:/var/www/html
