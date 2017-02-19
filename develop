@@ -17,8 +17,8 @@ export DB_NAME=${DB_NAME:-homestead}
 export DB_USER=${DB_USER:-homestead}
 export DB_PASS=${DB_PASS:-secret}
 export TZ=${TZ:-UTC}
-export PUID=${PUID:-1000}
-export PGID=${PGID:-1000}
+export PUID=$(id -u `whoami`)
+export PGID=$(id -g `whoami`)
 
 # Decide which docker-compose file to use
 COMPOSE_FILE="dev"

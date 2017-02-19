@@ -5,7 +5,7 @@ node('master') {
         git url: 'git@github.com:lkmadushan/laravel-docker.git'
 
         // Start services (Let docker-compose build containers for testing)
-        sh "./develop up -d"
+        sh "./develop up -d --build"
 
         // Get composer dependencies
         sh "./develop composer install"
