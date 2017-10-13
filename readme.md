@@ -2,6 +2,7 @@
 
 This is a modified repository of a "Dockerized" application, as covered on the [Dockerizing Your Application](https://shippingdocker.com/dockerized-app/) preview series from [shippingdocker.com](https://shippingdocker.com).
 
+
 > Docker for Laravel 5.4 (Node, Postgres, PHP7.1 and Nginx)
 
 ## How to run
