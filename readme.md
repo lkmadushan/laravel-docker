@@ -2,6 +2,8 @@
 
 > Docker for Laravel 5.4 (Node, Postgres, PHP7.1 and Nginx)
 
+> Credit goes to [shipping-docker](https://github.com/shipping-docker).
+
 ## How to run
 
 Make sure you have already installed [Docker](https://www.docker.com).
